@@ -21,12 +21,13 @@ selectedMode = RM.dndMode()
 
 #default = RM.dndMode.setMode()
 #default = RM.ShadowrunMode.setMode()
-default = RM.MotwMode.setMode()
+#default = RM.MotwMode.setMode()
 #default = RM.FateMode.setMode()
+default = RM.MnMMode.setMode()
 #testing change here
 '''Prints all avalible game systems'''
 def getModes():
-    return "Here are the avalible modes: \ndnd\nshadowrun\nmotw\nfate"
+    return "Here are the avalible modes: \ndnd\nshadowrun\nmotw\nfate\nmnm"
 
     
 
@@ -46,6 +47,8 @@ def setMode(message):
         return RM.MotwMode.setMode()
     elif msg == "fate":
         return RM.FateMode.setMode()
+    elif msg == "mnm":
+        return RM.MnMMode.setMode()
 
     return RM.dndMode()
 

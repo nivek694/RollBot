@@ -6,7 +6,7 @@ class Mode:
     '''The dice system to be used by the bot'''
     @staticmethod
     @abstractmethod
-    def roll(message):
+    def roll(message) ->str:
         pass
 
     '''Makses the class roll using this system'''
@@ -18,14 +18,15 @@ class Mode:
     '''Returns the name of the mode'''
     @staticmethod
     @abstractmethod
-    def toString():
+    def toString()-> str:
         pass
 
+'''Class for operating in Shadowrun'''
 class ShadowrunMode(Mode):
     '''Rolls a given number of dice and returns the dice roll. Gives the number of rolls of 5 or above if given with no postscipt or with "no edge".
     Gives the number of rolls of 4 or above if given the postscript "edge".'''
     @staticmethod
-    def roll(message):
+    def roll(message)-> str:
         #print("rolled")
         msg = message.content.replace("!roll", "")
         #print(msg)
@@ -63,13 +64,14 @@ class ShadowrunMode(Mode):
     def setMode():
         return ShadowrunMode()
     @staticmethod
-    def toString():
+    def toString() -> str:
         return "shadowrun"
 
+'''Class for operating in Dnd'''
 class dndMode(Mode):
     '''Outputs a string of a roll of a given number of dice, can be expanded to handle different systems'''
     @staticmethod
-    def roll(message):
+    def roll(message) -> str:
         #Remove !roll from the message
         msg = message.content.replace("!roll", "")
         #print(msg)
@@ -131,7 +133,7 @@ class dndMode(Mode):
 '''Class for operating Monster of the Week'''
 class MotwMode(Mode):
     @staticmethod
-    def roll(message):
+    def roll(message)-> str:
         msg = message.content.replace("!roll", "")
         negative = False
         if(msg.find("+") != -1):
@@ -160,13 +162,13 @@ class MotwMode(Mode):
     def setMode():
         return MotwMode()
     @staticmethod
-    def toString():
+    def toString() -> str:
         return "motw"
             
-        
+'''Class for operating FATE'''       
 class FateMode(Mode):
     @staticmethod
-    def roll(message):
+    def roll(message)-> str:
         #roll
         msg = message.content.replace("!roll", "")
         negative = False
@@ -193,5 +195,46 @@ class FateMode(Mode):
     def setMode():
         return FateMode()
     @staticmethod
-    def toString():
+    def toString()-> str:
         return "fate"
+
+'''Class for operating in Mutants and Masterminds'''
+class MnMMode(Mode):
+    '''The dice system to be used by the bot'''
+    @staticmethod
+    def roll(message)-> str:
+        #Rolls take the form of <number> vs <number>, where the first number is the agressors roll and the second is the defenders dc, or <number>, where 
+        # <number> is the agressors roll
+
+        #Remove !roll from the message
+        msg = message.content.replace("!roll", "")
+        rand = random.randint(1,20)
+        if(msg.rfind("vs") != -1):
+            #process with DC. Provide digrees of sucsess
+            results = str(msg).partition("vs")
+            roll = int(results[0]) + rand
+            print(results[2])
+            dc = int(results[2])
+            if (roll >= dc):
+                #roll wins
+                degrees = int((roll - dc) / 5) + 1
+                return "*Rolls*\nDie Roll: " + str(rand) + "\n Total: " + str(roll) + "\n" + str(degrees) + " degrees of succsess"
+            else:
+                degrees = int((dc - roll) / 5) + 1
+                return "*Rolls*\n" + "Die Roll: " + str(rand) + "\n Total: " + str(roll) + "\n" + str(degrees) + " degrees of failure"
+
+
+        else:
+            #Just process roll
+            bonus = int(msg)
+            return "*Rolls*\nDie Roll: " + str(rand)  + "\n Total: "+ str(rand + bonus)
+
+    '''Makses the class roll using this system'''
+    @staticmethod
+    def setMode():
+        return MnMMode()
+
+    '''Returns the name of the mode'''
+    @staticmethod
+    def toString()-> str:
+        return "mnm"
