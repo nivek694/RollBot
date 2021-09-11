@@ -11,6 +11,7 @@ global selectedMode
 global playerModes
 global default #default gamemode
 playerModes = {}
+dicOfModes = {}
 selectedMode = RM.dndMode()
 
 
@@ -18,16 +19,25 @@ selectedMode = RM.dndMode()
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
 
 #Change which of these is commented out to change the default
-
+DEFAULT_MODE = "mnm"
 #default = RM.dndMode.setMode()
+
+dicOfModes.update({"dnd" : RM.dndMode.setMode()})
 #default = RM.ShadowrunMode.setMode()
+dicOfModes.update({"shadowrun" : RM.ShadowrunMode.setMode()})
 #default = RM.MotwMode.setMode()
+dicOfModes.update({"motw" : RM.MotwMode.setMode()})
 #default = RM.FateMode.setMode()
-default = RM.MnMMode.setMode()
+dicOfModes.update({"fate" : RM.FateMode.setMode()})
+#default = RM.MnMMode.setMode()
+dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
 #testing change here
+default = dicOfModes[DEFAULT_MODE]
+
+
 '''Prints all avalible game systems'''
 def getModes():
-    return "Here are the avalible modes: \ndnd\nshadowrun\nmotw\nfate\nmnm"
+    return "Here are the avalible modes: " + str(dicOfModes.keys())
 
     
 
@@ -38,19 +48,8 @@ def getModes():
 def setMode(message):
     #Remove !mode
     msg = message.content.replace("!mode ", "")
-    if msg == 'dnd':
-        return RM.dndMode()
-        
-    elif msg == 'shadowrun':
-        return RM.ShadowrunMode.setMode()
-    elif msg == "motw":
-        return RM.MotwMode.setMode()
-    elif msg == "fate":
-        return RM.FateMode.setMode()
-    elif msg == "mnm":
-        return RM.MnMMode.setMode()
-
-    return RM.dndMode()
+    output = dicOfModes.get(msg, default)
+    return output
 
 
 
@@ -78,7 +77,7 @@ async def on_message(message : discord.Message):
         playerModes.update({message.author.id : setMode(message)})
         print(playerModes, '\n')
         #selectedMode = setMode(message)
-        await message.channel.send(message.author.display_name + "'s mode has been set to " + playerModes[message.author.id].toString())
+        await message.channel.send(message.author.display_name + "'s mode has been set to " + playerModes.get(message.author.id).toString())
     elif message.content.startswith("!current"):
         await message.channel.send(selectedMode.toString())
 
