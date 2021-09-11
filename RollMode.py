@@ -211,6 +211,8 @@ class MnMMode(Mode):
         rand = random.randint(1,20)
         if(msg.rfind("vs") != -1):
             #process with DC. Provide digrees of sucsess
+
+            #TODO: Include effects of natural ones and natural 20s
             results = str(msg).partition("vs")
             roll = int(results[0]) + rand
             print(results[2])
