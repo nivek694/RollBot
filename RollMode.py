@@ -209,21 +209,31 @@ class MnMMode(Mode):
         #Remove !roll from the message
         msg = message.content.replace("!roll", "")
         rand = random.randint(1,20)
+        #rand = 20 #For testing event of nat 20
+        #Handle nat 20
+        degrees = 1 if rand == 20 else 0
         if(msg.rfind("vs") != -1):
             #process with DC. Provide digrees of sucsess
 
             #TODO: Include effects of natural ones and natural 20s
             results = str(msg).partition("vs")
             roll = int(results[0]) + rand
-            print(results[2])
+            #print(results[2])
             dc = int(results[2])
             if (roll >= dc):
                 #roll wins
-                degrees = int((roll - dc) / 5) + 1
-                return "*Rolls*\nDie Roll: " + str(rand) + "\n Total: " + str(roll) + "\n" + str(degrees) + " degrees of succsess"
+                degrees += int((roll - dc) / 5) + 1
+
+                return "*Rolls*\nDie Roll: " + str(rand) + "\nTotal: " + str(roll) + "\n" + str(degrees) + " degrees of succsess"
             else:
-                degrees = int((dc - roll) / 5) + 1
-                return "*Rolls*\n" + "Die Roll: " + str(rand) + "\n Total: " + str(roll) + "\n" + str(degrees) + " degrees of failure"
+                if(rand == 20):
+                    degrees = -1
+                degrees += int((dc - roll) / 5) + 1
+                if(degrees == 0):
+                    return "*Rolls*\nDie Roll: " + str(rand) + "\nTotal: " + str(roll) + "\n" + str(1) + " degree of succsess"
+                else:
+                    return "*Rolls*\n" + "Die Roll: " + str(rand) + "\nTotal: " + str(roll) + "\n" + str(degrees) + " degree(s) of failure"
+                    
 
 
         else:
