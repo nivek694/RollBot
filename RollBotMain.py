@@ -1,6 +1,6 @@
 import discord
 import random
-from RollBot import RollMode as RM
+import RollMode as RM
 from configparser import ConfigParser
 
 config = ConfigParser()
