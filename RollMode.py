@@ -1,0 +1,197 @@
+import random
+from abc import ABC, abstractmethod
+class Mode:
+
+    
+    '''The dice system to be used by the bot'''
+    @staticmethod
+    @abstractmethod
+    def roll(message):
+        pass
+
+    '''Makses the class roll using this system'''
+    @staticmethod
+    @abstractmethod
+    def setMode():
+        pass
+
+    '''Returns the name of the mode'''
+    @staticmethod
+    @abstractmethod
+    def toString():
+        pass
+
+class ShadowrunMode(Mode):
+    '''Rolls a given number of dice and returns the dice roll. Gives the number of rolls of 5 or above if given with no postscipt or with "no edge".
+    Gives the number of rolls of 4 or above if given the postscript "edge".'''
+    @staticmethod
+    def roll(message):
+        #print("rolled")
+        msg = message.content.replace("!roll", "")
+        #print(msg)
+        total = 0
+        threshold = 5
+        output = ""
+        thisRoll = 0
+        glitch = 0
+        glitchMessage = ""
+        msg = msg.replace("no edge", "")
+        if(msg.find("edge") != -1):
+            msg = msg.replace("edge", "")
+            #print("edge replaced")
+            threshold = 4
+        #print(msg)
+        if(msg.strip().isdigit()):
+            for i in range(int(msg)):
+                thisRoll = random.randint(1, 6)
+                output += str(thisRoll) + ','
+                if thisRoll >= threshold:
+                    total += 1
+                if thisRoll == 1:
+                    glitch += 1
+
+        else:
+            return "Error: Please enter the number of dice for shadowrun mode"
+
+        if glitch >= int(msg) / 2:
+            glitchMessage = "\n Glitch"
+            
+        return "*Rolls* \n" + output.rstrip(',') + '\nTotal: ' + str(total)+ glitchMessage
+
+    '''Makses the class roll using this system'''
+    @staticmethod
+    def setMode():
+        return ShadowrunMode()
+    @staticmethod
+    def toString():
+        return "shadowrun"
+
+class dndMode(Mode):
+    '''Outputs a string of a roll of a given number of dice, can be expanded to handle different systems'''
+    @staticmethod
+    def roll(message):
+        #Remove !roll from the message
+        msg = message.content.replace("!roll", "")
+        #print(msg)
+        bonus = 0
+        #Handle bonus
+        if(msg.find('+') != -1):
+            part = msg.rpartition('+')
+            bonus = int(part[2])
+            msg = part[0]
+        #Handle penelty
+        if(msg.find('-') != -1):
+            part = msg.rpartition('-')
+            bonus = int(part[1] + part[2].strip())
+            msg = part[0]
+        #Handle throwing multable dice
+        if(msg.find('d') != -1):
+            #Handle finding number of dice and type of die
+            diceList = msg.rpartition('d');
+
+            numberOfDice = diceList[0]
+            dieSize = diceList[2]
+            return "*Rolls* \n" + dndMode.rollOutput(numberOfDice, dieSize, bonus)
+        
+        elif(msg.strip().isdigit()): #Handle one die on its own
+            return "*Rolls* \n" + dndMode.rollOutput(1, msg, bonus)
+        else: #Handle input with no die.
+            return "Error: Please input either a number on its own or 2 numbers in the form xdy."
+        
+
+    '''
+    Output is the rolls of the dice, seperated by commas, and the total ammount rolled
+    '''
+    @staticmethod
+    def rollOutput(numberOfDice, dieSize, bonus):
+        total = bonus
+        output = ""
+        thisRoll = 0
+        if(str(numberOfDice).replace(" ", "") == ""): #default to throwing one die
+            numberOfDice = 1
+        for i in range(int(numberOfDice)): #throw numberOfDice dice
+            thisRoll = random.randint(1, int(dieSize))
+            output += str(thisRoll) + ','
+            total += thisRoll
+        bonusText = ""
+        if(bonus != 0): #Add bonus
+            bonusText = " + " + str(bonus)
+        return output.rstrip(',') + bonusText + '\nTotal: ' + str(total)
+
+    '''Retuns an instance of dndMode'''
+    @staticmethod
+    def setMode():
+        return dndMode()
+
+    '''Returns the id of the mode'''
+    @staticmethod
+    def toString():
+        return "dnd"
+
+'''Class for operating Monster of the Week'''
+class MotwMode(Mode):
+    @staticmethod
+    def roll(message):
+        msg = message.content.replace("!roll", "")
+        negative = False
+        if(msg.find("+") != -1):
+            msg.replace("+","")
+        if(msg.strip() == ""):
+            msg = 0
+        total = int(msg)
+
+        output = ""
+        thisRoll = 0
+        for i in range(2):
+            thisRoll = random.randint(1, 6)
+            output += str(thisRoll) + ','
+            total += thisRoll
+        rollResult = "*Rolls* \n" + output.rstrip(',') + '\nTotal: ' + str(total) + "\nResult: "
+        if(total < 7):
+            rollResult += "Failure"
+        elif(total < 10):
+            rollResult += "7-9"
+        elif(total < 12):
+            rollResult += "10+"
+        else:
+            rollResult += "12+"
+        return rollResult
+    @staticmethod
+    def setMode():
+        return MotwMode()
+    @staticmethod
+    def toString():
+        return "motw"
+            
+        
+class FateMode(Mode):
+    @staticmethod
+    def roll(message):
+        #roll
+        msg = message.content.replace("!roll", "")
+        negative = False
+        if(msg.find("+") != -1):
+            msg.replace("+","")
+        if(msg.strip() == ""):
+            msg = "0"
+        total = int(msg)
+        output = ""
+        thisRoll = 0
+
+        for i in range(4):
+            thisRoll = random.randint(-1,1)
+            if(thisRoll == 1):
+                output += "+, "
+            elif(thisRoll == 0):
+                output += "[ ], "
+            else:
+                output += "-, "
+            total += thisRoll
+        return ":game_die:*Rolls*:game_die: \n" + output.rstrip(',') + '\nTotal: ' + str(total)
+
+    @staticmethod
+    def setMode():
+        return FateMode()
+    @staticmethod
+    def toString():
+        return "fate"
