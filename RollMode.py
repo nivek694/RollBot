@@ -237,6 +237,8 @@ class MnMMode(Mode):
 
         else:
             #Just process roll
+            if (str(msg).strip() == ""):
+                msg = 0
             bonus = int(msg)
             return "*Rolls*\nDie Roll: " + str(rand)  + "\n Total: "+ str(rand + bonus)
 
