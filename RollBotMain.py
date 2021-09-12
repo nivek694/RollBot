@@ -7,12 +7,10 @@ config = ConfigParser()
 config.read("config.ini")
 
 client = discord.Client()
-global selectedMode
 global playerModes
 global default #default gamemode
 playerModes = {}
 dicOfModes = {}
-selectedMode = RM.dndMode()
 
 
 #Bot Permissions number is 2048
@@ -31,7 +29,6 @@ dicOfModes.update({"motw" : RM.MotwMode.setMode()})
 dicOfModes.update({"fate" : RM.FateMode.setMode()})
 #default = RM.MnMMode.setMode()
 dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
-#testing change here
 default = dicOfModes[DEFAULT_MODE]
 
 
@@ -48,8 +45,7 @@ def getModes():
 def setMode(message):
     #Remove !mode
     msg = message.content.replace("!mode ", "")
-    output = dicOfModes.get(msg, default)
-    return output
+    return dicOfModes.get(msg, default)
 
 
 
@@ -76,10 +72,9 @@ async def on_message(message : discord.Message):
     elif message.content.startswith("!mode"):
         playerModes.update({message.author.id : setMode(message)})
         print(playerModes, '\n')
-        #selectedMode = setMode(message)
         await message.channel.send(message.author.display_name + "'s mode has been set to " + playerModes.get(message.author.id).toString())
     elif message.content.startswith("!current"):
-        await message.channel.send(selectedMode.toString())
+        await message.channel.send(playerModes.get(message.author.id).toString())
 
     #print("sucsess")
 
