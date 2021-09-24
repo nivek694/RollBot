@@ -267,7 +267,45 @@ class CofdMode(Mode):
         thisIsExtra = False
         if(rote):
             #Handle rote action
-            return "Rote not in yet"
+            fails = 0
+            temp = 0
+            for i in range(pool):
+                temp = 1
+                first = True
+                while(temp > 0):
+                    roll = CofdMode.rollDie()
+                    if(not first):
+                        output += "("
+                    output += str(roll)
+                    if(not first):
+                        output += ")"
+                    if(roll > 7):
+                        sucsess += 1
+                    elif(first):
+                        fails += 1
+                    if(roll >= again):
+                        temp += 1
+                    output += ", "
+                    first = False
+                    temp -= 1
+            output += "\nRerolls: "
+            for i in range(fails):
+                temp = 1
+                first = True
+                while(temp > 0):
+                    roll = CofdMode.rollDie()
+                    if(not first):
+                        output += "("
+                    output += str(roll)
+                    if(not first):
+                        output += ")"
+                    if(roll > 7):
+                        sucsess += 1
+                    if(roll >= again):
+                       temp += 1
+                    output += ", "
+                    first = False
+                    temp -= 1
         else:
             #Handle normal roll
             while(pool > 0):
@@ -287,9 +325,9 @@ class CofdMode(Mode):
                     output += ")"
                 output += ", "
                 pool -= 1
-            output += "\n sucsesses = " + str(sucsess)
+        output += "\n sucsesses = " + str(sucsess)
 
-            return output
+        return output
     '''The dice system to be used by the bot'''
     @staticmethod
     def roll(message : str) ->str:
