@@ -29,6 +29,7 @@ dicOfModes.update({"motw" : RM.MotwMode.setMode()})
 dicOfModes.update({"fate" : RM.FateMode.setMode()})
 #default = RM.MnMMode.setMode()
 dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
+dicOfModes.update({"cofd" : RM.CofdMode.setMode()})
 default = dicOfModes[DEFAULT_MODE]
 
 

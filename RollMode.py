@@ -251,3 +251,77 @@ class MnMMode(Mode):
     @staticmethod
     def toString()-> str:
         return "mnm"
+
+
+class CofdMode(Mode):
+    @staticmethod
+    def rollDie() -> int:
+        return random.randint(1,10)
+
+
+    @staticmethod
+    def cofdRoll(pool :int, again : int, rote  : bool) -> str:
+        sucsess = 0
+        output = ""
+        nextIsExtra = False
+        thisIsExtra = False
+        if(rote):
+            #Handle rote action
+            return "Rote not in yet"
+        else:
+            #Handle normal roll
+            while(pool > 0):
+                thisIsExtra = nextIsExtra
+                nextIsExtra = False
+                if(thisIsExtra):
+                    output += "("
+                roll = CofdMode.rollDie()
+                output += str(roll)
+                if(roll >= again):
+                    pool += 1
+                    nextIsExtra = True
+
+                if(roll > 7):
+                    sucsess += 1
+                if(thisIsExtra):
+                    output += ")"
+                output += ", "
+                pool -= 1
+            output += "\n sucsesses = " + str(sucsess)
+
+            return output
+    '''The dice system to be used by the bot'''
+    @staticmethod
+    def roll(message : str) ->str:
+        msg = message.content.replace("!roll", "")
+        again = 10
+        rote = False
+        if(msg.find("again") != -1):
+            if(msg.find("9-again") != -1):
+                again = 9
+                msg = msg.replace("9-again", "")
+            elif(msg.find("8-again") != -1):
+                again = 8
+                msg = msg.replace("8-again", "")
+            elif(msg.find("no-again") != -1):
+                again = 11
+                msg = msg.replace("no-again", "")
+        if(msg.find("rote") != -1):
+            rote = True;
+            msg = msg.replace("rote", "")
+        print(msg)
+        if(msg.strip().isdigit()):
+            pool = int(msg)
+            return CofdMode.cofdRoll(pool, again, rote)
+        else:
+            return "Error: Roll invaled"
+
+    '''Makses the class roll using this system'''
+    @staticmethod
+    def setMode():
+        return CofdMode()
+
+    '''Returns the name of the mode'''
+    @staticmethod
+    def toString()-> str:
+        return "cofd"
