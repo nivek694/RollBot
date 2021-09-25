@@ -17,7 +17,7 @@ dicOfModes = {}
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
 
 #Change which of these is commented out to change the default
-DEFAULT_MODE = "shadowrun"
+DEFAULT_MODE = "cofd"
 #default = RM.dndMode.setMode()
 
 dicOfModes.update({"dnd" : RM.dndMode.setMode()})

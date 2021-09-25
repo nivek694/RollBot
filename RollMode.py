@@ -1,5 +1,6 @@
 import random
 from abc import ABC, abstractmethod
+
 class Mode:
 
     
@@ -263,6 +264,7 @@ class CofdMode(Mode):
     def cofdRoll(pool :int, again : int, rote  : bool) -> str:
         sucsess = 0
         output = ""
+        dramaticFailure = False
         nextIsExtra = False
         thisIsExtra = False
         if(rote):
@@ -274,12 +276,17 @@ class CofdMode(Mode):
                 first = True
                 while(temp > 0):
                     roll = CofdMode.rollDie()
+                    won = (roll > 7)
                     if(not first):
                         output += "("
+                    if(won):
+                        output += "**"
                     output += str(roll)
+                    if(won):
+                        output += "**"
                     if(not first):
                         output += ")"
-                    if(roll > 7):
+                    if(won):
                         sucsess += 1
                     elif(first):
                         fails += 1
@@ -294,9 +301,14 @@ class CofdMode(Mode):
                 first = True
                 while(temp > 0):
                     roll = CofdMode.rollDie()
+                    won = roll > 7
                     if(not first):
                         output += "("
+                    if(won):
+                        output += "**"
                     output += str(roll)
+                    if(won):
+                        output += "**"
                     if(not first):
                         output += ")"
                     if(roll > 7):
@@ -308,24 +320,44 @@ class CofdMode(Mode):
                     temp -= 1
         else:
             #Handle normal roll
-            while(pool > 0):
-                thisIsExtra = nextIsExtra
-                nextIsExtra = False
-                if(thisIsExtra):
-                    output += "("
+            if(pool <= 0):
                 roll = CofdMode.rollDie()
+                won = roll == 10
+                if(won):
+                    output += "**"
                 output += str(roll)
-                if(roll >= again):
-                    pool += 1
-                    nextIsExtra = True
-
-                if(roll > 7):
+                if(won):
+                    output += "**"
                     sucsess += 1
-                if(thisIsExtra):
-                    output += ")"
-                output += ", "
-                pool -= 1
+                dramaticFailure = roll == 1
+
+            else:
+
+                while(pool > 0):
+                    thisIsExtra = nextIsExtra
+                    nextIsExtra = False
+                    if(thisIsExtra):
+                        output += "("
+                    roll = CofdMode.rollDie()
+                    won = roll > 7
+                    if(won):
+                        output += "**"
+                    output += str(roll)
+                    if(won):
+                        output += "**"
+                    if(roll >= again):
+                        pool += 1
+                        nextIsExtra = True
+
+                    if(roll > 7):
+                        sucsess += 1
+                    if(thisIsExtra):
+                        output += ")"
+                    output += ", "
+                    pool -= 1
         output += "\n sucsesses = " + str(sucsess)
+        if(dramaticFailure):
+            output += "\n***DRAMATIC FAILURE***"
 
         return output
     '''The dice system to be used by the bot'''
@@ -347,12 +379,15 @@ class CofdMode(Mode):
         if(msg.find("rote") != -1):
             rote = True;
             msg = msg.replace("rote", "")
-        print(msg)
-        if(msg.strip().isdigit()):
-            pool = int(msg)
-            return CofdMode.cofdRoll(pool, again, rote)
+        #print(msg)
+        tmp = CofdMode.parseRoll(msg)
+        #if(tmp.isdigit()):
+        pool = int(tmp)
+        return CofdMode.cofdRoll(pool, again, rote)
+        '''
         else:
             return "Error: Roll invaled"
+        '''
 
     '''Makses the class roll using this system'''
     @staticmethod
@@ -363,3 +398,15 @@ class CofdMode(Mode):
     @staticmethod
     def toString()-> str:
         return "cofd"
+
+    def parseRoll(msg : str):
+        #remove whitespace
+        msg = msg.replace(" ", "")
+        total = 0
+        if(msg.find("+") != -1):
+              temp = msg.split("+")
+              for i in temp:
+                  total += int(i)
+        else:
+            return int(msg)
+        return total
