@@ -11,7 +11,7 @@ global playerModes
 global default #default gamemode
 playerModes = {}
 dicOfModes = {}
-
+ADMIN_ID = 393122454236692480
 
 #Bot Permissions number is 2048
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
@@ -76,10 +76,23 @@ async def on_message(message : discord.Message):
         await message.channel.send(message.author.display_name + "'s mode has been set to " + playerModes.get(message.author.id).toString())
     elif message.content.startswith("!current"):
         await message.channel.send(playerModes.get(message.author.id).toString())
-
+    elif(message.content.startswith("!default")):
+        if(message.author.id == ADMIN_ID):
+            await setDefault(message)
+            #await message.channel.send("Default changed")
+        else:
+            await message.channel.send("***Default can only be changed by bot owner***")
     #print("sucsess")
 
-
+async def setDefault(message : discord.Message):
+    msg = message.content.replace("!default", "").strip()
+    print(msg)
+    if msg in dicOfModes:
+        default = dicOfModes[msg]
+        await message.channel.send("Default set to " + msg)
+    else:
+        await message.channel.send("mode not found")
+        
 
 
 
