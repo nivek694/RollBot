@@ -381,13 +381,13 @@ class CofdMode(Mode):
             msg = msg.replace("rote", "")
         #print(msg)
         tmp = CofdMode.parseRoll(msg)
-        #if(tmp.isdigit()):
-        pool = int(tmp)
-        return CofdMode.cofdRoll(pool, again, rote)
-        '''
+        if (str(tmp).isdigit()):
+            pool = int(tmp)
+            return CofdMode.cofdRoll(pool, again, rote)
+        
         else:
             return "Error: Roll invaled"
-        '''
+        
 
     '''Makses the class roll using this system'''
     @staticmethod
@@ -401,12 +401,20 @@ class CofdMode(Mode):
 
     def parseRoll(msg : str):
         #remove whitespace
+        
         msg = msg.replace(" ", "")
         total = 0
         if(msg.find("+") != -1):
               temp = msg.split("+")
               for i in temp:
-                  total += int(i)
+                  if(i.isdigit()):
+                      total += int(i)
+                  else:
+                      return "Error"
+                  
         else:
-            return int(msg)
+            if(msg.isdigit()):
+                return int(msg)
+            else:
+                return "Error"
         return total
