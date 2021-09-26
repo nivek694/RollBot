@@ -81,10 +81,13 @@ async def on_message(message : discord.Message):
             await setDefault(message)
             #await message.channel.send("Default changed")
         else:
-            await message.channel.send("***Default can only be changed by bot owner***")
+            print("Invaled default change. The the culprit is:", message.author)
+            
+            await message.channel.send("***DEFAULT CAN ONLY BE CHANGED BY BOT OWNER***")
     #print("sucsess")
 
 async def setDefault(message : discord.Message):
+    global default
     msg = message.content.replace("!default", "").strip()
     print(msg)
     if msg in dicOfModes:
