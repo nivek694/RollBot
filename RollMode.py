@@ -37,6 +37,9 @@ class ShadowrunMode(Mode):
         thisRoll = 0
         glitch = 0
         glitchMessage = ""
+        glitchDie = (msg.find(glitch) != -1)
+        msg = message.content.replace("glitch", "")
+        glitchDieMessage = ""
         msg = msg.replace("no edge", "")
         if(msg.find("edge") != -1):
             msg = msg.replace("edge", "")
@@ -57,8 +60,16 @@ class ShadowrunMode(Mode):
 
         if glitch >= int(msg) / 2:
             glitchMessage = "\n Glitch"
-            
-        return "*Rolls* \n" + output.rstrip(',') + '\nTotal: ' + str(total)+ glitchMessage
+        
+        if(glitchDie):
+            glitchDieMessage += "Glitch die: "
+            glitchRoll = random.randint(1,6)
+            glitchDieMessage += str(glitchRoll) + "\n"
+            if glitchRoll == 5 or glitchRoll == 6:
+                glitchDieMessage += "Exploit"
+            if(glitchRoll == 1):
+                glitchDieMessage += "glitch"
+        return "*Rolls* \n" + output.rstrip(',') + '\nTotal: ' + str(total)+ glitchMessage + glitchDieMessage
 
     '''Makses the class roll using this system'''
     @staticmethod

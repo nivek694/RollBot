@@ -77,25 +77,24 @@ async def on_message(message : discord.Message):
     elif message.content.startswith("!current"):
         await message.channel.send(playerModes.get(message.author.id).toString())
     elif(message.content.startswith("!default")):
-        if(message.author.id == ADMIN_ID):
-            await setDefault(message)
-            #await message.channel.send("Default changed")
-        else:
-            print("Invaled default change. The the culprit is:", message.author)
-            
-            await message.channel.send("***DEFAULT CAN ONLY BE CHANGED BY BOT OWNER***")
+        await setDefault(message)
+        #await message.channel.send("Default changed")
     #print("sucsess")
 
 '''Changes the default gamemode to the game listed in message.'''
 async def setDefault(message : discord.Message):
     global default
-    msg = message.content.replace("!default", "").strip()
-    print(msg)
-    if msg in dicOfModes:
-        default = dicOfModes[msg]
-        await message.channel.send("Default set to " + msg)
+    if(message.author.id == ADMIN_ID):
+        msg = message.content.replace("!default", "").strip()
+        print(msg)
+        if msg in dicOfModes:
+            default = dicOfModes[msg]
+            await message.channel.send("Default set to " + msg)
+        else:
+            await message.channel.send("mode not found")
     else:
-        await message.channel.send("mode not found")
+            print("Invaled default change. The the culprit is:", message.author)
+            await message.channel.send("***DEFAULT CAN ONLY BE CHANGED BY BOT OWNER***")
         
 
 
