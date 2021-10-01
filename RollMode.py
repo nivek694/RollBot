@@ -37,8 +37,8 @@ class ShadowrunMode(Mode):
         thisRoll = 0
         glitch = 0
         glitchMessage = ""
-        glitchDie = (msg.find(glitch) != -1)
-        msg = message.content.replace("glitch", "")
+        glitchDie = (msg.find("glitch") != -1)
+        msg = msg.replace("glitch", "")
         glitchDieMessage = ""
         msg = msg.replace("no edge", "")
         if(msg.find("edge") != -1):
@@ -56,19 +56,20 @@ class ShadowrunMode(Mode):
                     glitch += 1
 
         else:
+            print(msg)
             return "Error: Please enter the number of dice for shadowrun mode"
 
         if glitch >= int(msg) / 2:
             glitchMessage = "\n Glitch"
         
         if(glitchDie):
-            glitchDieMessage += "Glitch die: "
+            glitchDieMessage += "\nGlitch die: "
             glitchRoll = random.randint(1,6)
-            glitchDieMessage += str(glitchRoll) + "\n"
+            glitchDieMessage += str(glitchRoll)
             if glitchRoll == 5 or glitchRoll == 6:
-                glitchDieMessage += "Exploit"
+                glitchDieMessage += ", Exploit\n"
             if(glitchRoll == 1):
-                glitchDieMessage += "glitch"
+                glitchDieMessage += ", Glitch\n"
         return "*Rolls* \n" + output.rstrip(',') + '\nTotal: ' + str(total)+ glitchMessage + glitchDieMessage
 
     '''Makses the class roll using this system'''
