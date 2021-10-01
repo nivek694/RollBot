@@ -86,6 +86,7 @@ async def on_message(message : discord.Message):
             await message.channel.send("***DEFAULT CAN ONLY BE CHANGED BY BOT OWNER***")
     #print("sucsess")
 
+'''Changes the default gamemode to the game listed in message.'''
 async def setDefault(message : discord.Message):
     global default
     msg = message.content.replace("!default", "").strip()
