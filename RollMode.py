@@ -458,7 +458,7 @@ class SpellboundKingdomsMode(Mode):
     def rollDie(input : int) ->int:
         print("Input: ",input)
         rollResults = [2,4,6,8,10,12,20]
-        rollPointer = 0;
+        rollPointer = 0; #Determans which die is thrown. You roll the die closest die that is less than your score
         if(input >= 20):
             rollPointer = 6
         elif(input >= 12):
