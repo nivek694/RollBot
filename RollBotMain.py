@@ -17,7 +17,7 @@ ADMIN_ID = 393122454236692480
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
 
 #Change which of these is commented out to change the default
-DEFAULT_MODE = "cofd"
+DEFAULT_MODE = "sbk"
 #default = RM.dndMode.setMode()
 
 dicOfModes.update({"dnd" : RM.dndMode.setMode()})
@@ -30,6 +30,7 @@ dicOfModes.update({"fate" : RM.FateMode.setMode()})
 #default = RM.MnMMode.setMode()
 dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
 dicOfModes.update({"cofd" : RM.CofdMode.setMode()})
+dicOfModes.update({"sbk" : RM.SpellboundKingdomsMode.setMode()})
 default = dicOfModes[DEFAULT_MODE]
 
 

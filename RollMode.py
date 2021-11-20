@@ -430,3 +430,65 @@ class CofdMode(Mode):
             else:
                 return "Error"
         return total
+
+class SpellboundKingdomsMode(Mode):
+
+    
+    @staticmethod
+    def roll(message) ->str:
+        msg = message.content.replace("!roll", "")
+        msg = str(msg).strip()
+        msg = msg.replace(",", " ")
+        output = ""
+        part = str(msg).split(" ") #Currently assuming that only numbers will be given
+
+        for i in part:
+            i = i.strip();
+            i = i.replace(" ", "")
+            
+            if(i != ""):
+                output += str(SpellboundKingdomsMode.rollDie(int(i))) + ", "
+
+        
+        return output
+
+
+
+    @staticmethod
+    def rollDie(input : int) ->int:
+        print("Input: ",input)
+        rollResults = [2,4,6,8,10,12,20]
+        rollPointer = 0;
+        if(input >= 20):
+            rollPointer = 6
+        elif(input >= 12):
+            rollPointer = 5
+        elif(input >= 10):
+            rollPointer = 4
+        elif(input >= 8):
+            rollPointer = 3
+        elif(input >= 6):
+            rollPointer = 2
+        elif(input >= 4):
+            rollPointer = 1
+        else:
+            rollPointer = 0
+
+        print("Die rolled: ", rollResults[rollPointer])
+        roll = random.randint(1,rollResults[rollPointer])
+        print("Roll: ",roll)
+        if(roll == rollResults[rollPointer] and rollPointer < 6):
+            print("Max roll, rerolling", roll)
+            newroll = SpellboundKingdomsMode.rollDie(rollResults[rollPointer + 1])
+            roll = max(roll, newroll)
+
+        print()
+        return int(roll)
+
+    @staticmethod
+    def setMode():
+        return SpellboundKingdomsMode()
+
+    @staticmethod 
+    def toString()-> str:
+        return "sbk"
