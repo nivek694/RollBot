@@ -11,7 +11,7 @@ global playerModes
 global default #default gamemode
 playerModes = {}
 dicOfModes = {}
-ADMIN_ID = 393122454236692480
+ADMIN_ID = int(config["ADMIN"]["adminID"])
 
 #Bot Permissions number is 2048
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
