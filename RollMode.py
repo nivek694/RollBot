@@ -455,7 +455,7 @@ class SpellboundKingdomsMode(Mode):
 
 
     @staticmethod
-    def rollDie(input : int) ->int:
+    def rollDie(input : int, reroll=False) ->int:
         print("Input: ",input)
         rollResults = [2,4,6,8,10,12,20]
         rollPointer = 0; #Determans which die is thrown. You roll the die closest die that is less than your score
@@ -479,10 +479,11 @@ class SpellboundKingdomsMode(Mode):
         print("Roll: ",roll)
         if(roll == rollResults[rollPointer] and rollPointer < 6):
             print("Max roll, rerolling", roll)
-            newroll = SpellboundKingdomsMode.rollDie(rollResults[rollPointer + 1])
+            newroll = SpellboundKingdomsMode.rollDie(rollResults[rollPointer + 1], reroll=True)
             roll = max(roll, newroll)
 
-        print()
+        if not reroll:
+            print()
         return int(roll)
 
     @staticmethod
