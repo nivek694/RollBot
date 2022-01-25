@@ -493,3 +493,82 @@ class SpellboundKingdomsMode(Mode):
     @staticmethod 
     def toString()-> str:
         return "sbk"
+
+class FEVMode(Mode):
+    """
+    Class for rolling using Friendship, Effort, Victory.
+    """
+    
+    shocked_keyword = "shocked"
+    inspired_keyword = "inspired"
+    '''The dice system to be used by the bot'''
+    @staticmethod
+    def roll(message) ->str:
+        msg : str = message.content.replace("!roll", "")
+        shock = FEVMode.shocked_keyword in msg
+        inspired = FEVMode.inspired_keyword in msg
+        msg = msg.replace(FEVMode.shocked_keyword, "").replace(FEVMode.inspired_keyword, "").replace("+", "").strip()
+
+        dice : list = [random.randrange(1,7), random.randrange(1,7), random.randrange(1,7)]
+        
+        res = [int(i) for i in msg.split() if i.isdigit()]
+        mod = sum(res)
+        dieRoll = []
+        print(dice)
+        if((shock and inspired) or (not shock and not inspired)):
+            del dice[2]
+            for i in dice:
+                dieRoll.append(i)
+        elif(shock):
+            maxDie = FEVMode.findMaxIndex(dice)
+            for i in range(len(dice)):
+                if i == maxDie:
+                    continue
+                dieRoll.append(dice[i])
+        else:
+            minDie = FEVMode.findMinIndex(dice)
+            for i in range(len(dice)):
+                if(i == minDie):
+                    continue
+                dieRoll.append(dice[i])
+        print(dieRoll)
+        
+        result = 0
+        total = sum(dieRoll) + int(mod)
+        if total >= 9:
+            result = "9+"
+        elif(total >= 6):
+            result = "6+"
+        else:
+            total = "5-"
+        string = """:fire:rolls:fire:
+%s -> %s
+Without bonus: %s
+Total: %s
+%s""" %(str(dice), dieRoll, sum(dieRoll), total, result)
+        return string
+    '''Makses the class roll using this system'''
+    @staticmethod
+    def setMode():
+        return FEVMode()
+
+    '''Returns the name of the mode'''
+    @staticmethod
+    def toString()-> str:
+        return "fev"
+
+    def findMinIndex(l : list):
+        minIndex = 0
+        for i in range(len(l)):
+            print("testing %s" %i)
+            if(l[i] < l[minIndex]):
+               print("replacing %i with %i" %(l[minIndex], l[i]))
+               minIndex = i
+        return minIndex
+
+    def findMaxIndex(l : list):
+        maxIndex = 0
+        for i in range(len(l)):
+            if(l[i] > l[maxIndex]):
+               maxIndex = i
+        return maxIndex

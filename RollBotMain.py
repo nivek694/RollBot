@@ -17,7 +17,7 @@ ADMIN_ID = int(config["ADMIN"]["adminID"])
 #https://discord.com/api/oauth2/authorize?client_id=843156754921160724&permissions=2048&scope=bot
 
 #Change which of these is commented out to change the default
-DEFAULT_MODE = "sbk"
+DEFAULT_MODE = "fev"
 #default = RM.dndMode.setMode()
 
 dicOfModes.update({"dnd" : RM.dndMode.setMode()})
@@ -31,6 +31,7 @@ dicOfModes.update({"fate" : RM.FateMode.setMode()})
 dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
 dicOfModes.update({"cofd" : RM.CofdMode.setMode()})
 dicOfModes.update({"sbk" : RM.SpellboundKingdomsMode.setMode()})
+dicOfModes.update({"fev" : RM.FEVMode})
 default = dicOfModes[DEFAULT_MODE]
 
 
