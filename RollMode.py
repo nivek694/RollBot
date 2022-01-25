@@ -1,3 +1,4 @@
+from operator import contains
 import random
 from abc import ABC, abstractmethod
 
@@ -501,6 +502,10 @@ class FEVMode(Mode):
     
     shocked_keyword = "shocked"
     inspired_keyword = "inspired"
+
+    inspired_emoji = ":fire:"
+    shocked_emoji = ":scream:"
+    normal_emoji = ":game_die:"
     '''The dice system to be used by the bot'''
     @staticmethod
     def roll(message) ->str:
@@ -513,6 +518,10 @@ class FEVMode(Mode):
         
         res = [int(i) for i in msg.split() if i.isdigit()]
         mod = sum(res)
+        neg_list = [i for i in msg.split() if "-" in i]
+        for i in neg_list:
+            if i.replace("-", "").isdigit():
+                mod += int(i)
         dieRoll = []
         print(dice)
         if((shock and inspired) or (not shock and not inspired)):
@@ -531,8 +540,9 @@ class FEVMode(Mode):
                 if(i == minDie):
                     continue
                 dieRoll.append(dice[i])
-        print(dieRoll)
-        
+        print(dieRoll,"\n")
+        emoji = FEVMode.selectEmoji(shock, inspired)
+
         result = 0
         total = sum(dieRoll) + int(mod)
         if total >= 9:
@@ -540,12 +550,12 @@ class FEVMode(Mode):
         elif(total >= 6):
             result = "6+"
         else:
-            total = "5-"
-        string = """:fire:rolls:fire:
+            result = "5-"
+        string = """%srolls%s
 %s -> %s
 Without bonus: %s
 Total: %s
-%s""" %(str(dice), dieRoll, sum(dieRoll), total, result)
+%s""" %(emoji, emoji, str(dice), dieRoll, sum(dieRoll), total, result)
         return string
     '''Makses the class roll using this system'''
     @staticmethod
@@ -560,9 +570,7 @@ Total: %s
     def findMinIndex(l : list):
         minIndex = 0
         for i in range(len(l)):
-            print("testing %s" %i)
             if(l[i] < l[minIndex]):
-               print("replacing %i with %i" %(l[minIndex], l[i]))
                minIndex = i
         return minIndex
 
@@ -572,3 +580,11 @@ Total: %s
             if(l[i] > l[maxIndex]):
                maxIndex = i
         return maxIndex
+
+    def selectEmoji(shock : bool, inspired : bool) -> str:
+        if((shock and inspired) or (not shock and not inspired)):
+            return FEVMode.normal_emoji
+        elif (shock):
+            return FEVMode.shocked_emoji
+        else:
+            return FEVMode.inspired_emoji
