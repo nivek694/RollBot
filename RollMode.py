@@ -512,13 +512,13 @@ class FEVMode(Mode):
         msg : str = message.content.replace("!roll", "")
         shock = FEVMode.shocked_keyword in msg
         inspired = FEVMode.inspired_keyword in msg
-        msg = msg.replace(FEVMode.shocked_keyword, " ").replace(FEVMode.inspired_keyword, " ").replace("+", " ").strip()
+        msg = msg.replace(FEVMode.shocked_keyword, " ").replace(FEVMode.inspired_keyword, " ").replace("+", " ").replace("-", " -").strip()
 
         dice : list = [random.randrange(1,7), random.randrange(1,7), random.randrange(1,7)]
         
-        res = [int(i) for i in msg.split() if i.isdigit()]
+        res = [int(i) for i in msg.split() if i.isdigit()] #calculates positve modifiers
         mod = sum(res)
-        neg_list = [i for i in msg.split() if "-" in i]
+        neg_list = [i for i in msg.split() if "-" in i] # calculates negative modifiers
         for i in neg_list:
             if i.replace("-", "").isdigit():
                 mod += int(i)
