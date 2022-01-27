@@ -551,12 +551,9 @@ class FEVMode(Mode):
             result = "6+"
         else:
             result = "5-"
-        string = """%srolls%s
-%s -> %s
-Without bonus: %s
-Total: %s
-%s""" %(emoji, emoji, str(dice), dieRoll, sum(dieRoll), total, result)
+        string = """%srolls%s\n%s -> %s\nWithout bonus: %s\nTotal: %s\n%s""" %(emoji, emoji, str(dice), dieRoll, sum(dieRoll), total, result)
         return string
+
     '''Makses the class roll using this system'''
     @staticmethod
     def setMode():
