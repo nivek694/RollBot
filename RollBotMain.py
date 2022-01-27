@@ -1,5 +1,4 @@
 import discord
-import random
 import RollMode as RM
 from configparser import ConfigParser
 

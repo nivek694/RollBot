@@ -512,7 +512,7 @@ class FEVMode(Mode):
         msg : str = message.content.replace("!roll", "")
         shock = FEVMode.shocked_keyword in msg
         inspired = FEVMode.inspired_keyword in msg
-        msg = msg.replace(FEVMode.shocked_keyword, "").replace(FEVMode.inspired_keyword, "").replace("+", "").strip()
+        msg = msg.replace(FEVMode.shocked_keyword, " ").replace(FEVMode.inspired_keyword, " ").replace("+", " ").strip()
 
         dice : list = [random.randrange(1,7), random.randrange(1,7), random.randrange(1,7)]
         
