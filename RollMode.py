@@ -3,12 +3,13 @@ import random
 from abc import ABC, abstractmethod
 
 class Mode:
-
-    
     '''The dice system to be used by the bot'''
+    
+    
     @staticmethod
     @abstractmethod
     def roll(message) ->str:
+        """Returns a roll as defined in the Mode's system using the string after !roll as input."""
         pass
 
     '''Makses the class roll using this system'''
@@ -17,10 +18,11 @@ class Mode:
     def setMode():
         pass
 
-    '''Returns the name of the mode'''
+    
     @staticmethod
     @abstractmethod
     def toString()-> str:
+        '''Returns the name of the mode. This is used to identify the mode in RollBotMain so this string must be unique.'''
         pass
 
 '''Class for operating in Shadowrun'''
@@ -212,9 +214,9 @@ class FateMode(Mode):
     def toString()-> str:
         return "fate"
 
-'''Class for operating in Mutants and Masterminds'''
+
 class MnMMode(Mode):
-    '''The dice system to be used by the bot'''
+    '''Class for operating in Mutants and Masterminds'''
     @staticmethod
     def roll(message)-> str:
         #Rolls take the form of <number> vs <number>, where the first number is the agressors roll and the second is the defenders dc, or <number>, where 
@@ -256,12 +258,10 @@ class MnMMode(Mode):
             bonus = int(msg)
             return "*Rolls*\nDie Roll: " + str(rand)  + "\n Total: "+ str(rand + bonus)
 
-    '''Makses the class roll using this system'''
     @staticmethod
     def setMode():
         return MnMMode()
 
-    '''Returns the name of the mode'''
     @staticmethod
     def toString()-> str:
         return "mnm"
@@ -373,7 +373,6 @@ class CofdMode(Mode):
             output += "\n***DRAMATIC FAILURE***"
 
         return output
-    '''The dice system to be used by the bot'''
     @staticmethod
     def roll(message : str) ->str:
         msg = message.content.replace("!roll", "")
@@ -402,7 +401,7 @@ class CofdMode(Mode):
             return "Error: Roll invaled"
         
 
-    '''Makses the class roll using this system'''
+    '''Makes the class roll using this system'''
     @staticmethod
     def setMode():
         return CofdMode()
@@ -506,9 +505,11 @@ class FEVMode(Mode):
     inspired_emoji = ":fire:"
     shocked_emoji = ":scream:"
     normal_emoji = ":game_die:"
-    '''The dice system to be used by the bot'''
+    
     @staticmethod
     def roll(message) ->str:
+        """Rolls 2d6 and adds the sum of the numbers provided in the message. Rolls 3d6 drop lowest if inspired_keyword is in the message and 3d6 drop
+        highest if shocked_keyword is in the message. If both are in the message it behaves as if neither are in the message."""
         msg : str = message.content.replace("!roll", "")
         shock = FEVMode.shocked_keyword in msg
         inspired = FEVMode.inspired_keyword in msg

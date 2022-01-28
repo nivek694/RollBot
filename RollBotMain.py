@@ -30,17 +30,14 @@ dicOfModes.update({"fev" : RM.FEVMode})
 default = dicOfModes[DEFAULT_MODE]
 
 
-'''Prints all avalible game systems'''
+
 def getModes():
+    '''Prints all avalible game systems'''
     return "Here are the avalible modes: " + str(dicOfModes.keys())
 
     
-
-
-
-'''Sets the dice roller to the game system provided in the message'''
-
 def setMode(message):
+    '''Sets the dice roller to the game system provided in the message'''
     #Remove !mode
     msg = message.content.replace("!mode ", "")
     return dicOfModes.get(msg, default)
@@ -55,6 +52,15 @@ async def on_ready():
 
 @client.event
 async def on_message(message : discord.Message):
+    """
+    Parses a message submitted by a user
+    If a user does not have an assosiated gamemode, it is set to DEFAULT_MODE.
+    If the message starts with !modes, a message is sent that sends all available modes.
+    If a message starts with !roll, it parses the rest of the message as described in the users Mode
+    If a message starts with !mode, the senders mode is set to the mode associated with the end of the string. If the message sent is not a valid key, the mode is set to the default mode insted.
+    If a message starts with !current, it sends a message displaying the users current mode.
+    If a message starts with !default, setDefault is called.
+    """
     global playerModes
     if message.author == client.user:
         return
@@ -78,8 +84,8 @@ async def on_message(message : discord.Message):
         #await message.channel.send("Default changed")
     #print("sucsess")
 
-'''Changes the default gamemode to the game listed in message.'''
 async def setDefault(message : discord.Message):
+    '''Changes the default gamemode to the game listed in message.'''
     global default
     if(message.author.id == ADMIN_ID):
         msg = message.content.replace("!default", "").strip()
