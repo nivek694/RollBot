@@ -17,16 +17,12 @@ ADMIN_ID = int(config["ADMIN"]["adminID"])
 
 #Change which of these is commented out to change the default
 DEFAULT_MODE = "fev"
-#default = RM.dndMode.setMode()
 
+#Put all modes to be made available here.
 dicOfModes.update({"dnd" : RM.dndMode.setMode()})
-#default = RM.ShadowrunMode.setMode()
 dicOfModes.update({"shadowrun" : RM.ShadowrunMode.setMode()})
-#default = RM.MotwMode.setMode()
 dicOfModes.update({"motw" : RM.MotwMode.setMode()})
-#default = RM.FateMode.setMode()
 dicOfModes.update({"fate" : RM.FateMode.setMode()})
-#default = RM.MnMMode.setMode()
 dicOfModes.update({"mnm" : RM.MnMMode.setMode()})
 dicOfModes.update({"cofd" : RM.CofdMode.setMode()})
 dicOfModes.update({"sbk" : RM.SpellboundKingdomsMode.setMode()})
